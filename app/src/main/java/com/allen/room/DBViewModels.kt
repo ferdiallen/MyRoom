@@ -1,29 +1,35 @@
 package com.allen.room
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
+import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class DBViewModels(application: Application) : AndroidViewModel(application) {
-    private val repos:Repo
-     var readAllData: LiveData<List<DB>>
+@HiltViewModel
+class DBViewModels @Inject constructor(
+    private val repo: Repo
+) : ViewModel() {
+    var collected = repo.getAlls()
+        private set
 
-    init {
-        val usersDB = Databases.getDB(application).dbDao()
-        repos = Repo(usersDB)
-        readAllData = repos.getAlls()
-    }
-    fun tambahUsers(users:DB){
+    fun tambahUsers(users: DB) {
         viewModelScope.launch(Dispatchers.IO) {
-            repos.InsertUsers(users)
-
+            repo.InsertUsers(users)
         }
     }
-    fun bacaData(){
-        readAllData.value
+
+    fun deleteUser(user: DB) {
+        viewModelScope.launch {
+            repo.deleteUsers(user)
+        }
+    }
+
+    fun deleteUserByName(name: String) {
+
     }
 }

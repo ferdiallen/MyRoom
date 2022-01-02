@@ -1,13 +1,14 @@
 package com.allen.room
 
-import androidx.lifecycle.LiveData
+import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class Repo(private val dao:DBDAO) {
-    fun getAlls(): LiveData<List<DB>> = dao.getAll()
+class Repo @Inject constructor(private val dao: DBDAO) {
+    fun getAlls(): Flow<List<DB>> = dao.getAll()
 
-    suspend fun InsertUsers(users:DB) = dao.InsertData(users)
+    suspend fun InsertUsers(users: DB) = dao.InsertData(users)
 
-    suspend fun updateUsers(users:DB) = dao.UpdateData(users)
+    suspend fun updateUsers(users: DB) = dao.UpdateData(users)
 
-    suspend fun deletUsers(users: DB) = dao.deleteData(users)
+    suspend fun deleteUsers(users: DB) = dao.deleteData(users)
 }
